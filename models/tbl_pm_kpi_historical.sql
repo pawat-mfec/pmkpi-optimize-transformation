@@ -145,5 +145,6 @@
     CurrentFlag = 0 AND EXTRACT(DAY FROM snapshotDate) = 5
     AND 1 = (
     SELECT MIN(1) DUMMY
-    FROM  {{ ref('pm_kpi_wo_notif_and_oper_historical') }}
+  FROM
+    `demo_dbt.pm_kpi_wo_notif_and_oper_historical`
     LIMIT 1 )
