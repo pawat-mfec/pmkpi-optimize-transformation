@@ -1,30 +1,10 @@
-name: 'pmkpi_optimize_transformation'
-version: '1.0.0'
-#docker-image-tag:beta-2
-
-profile: "gcp-my-th-it-dev"
-
-# These configurations specify where dbt should look for different types of files.
-# The `source-paths` config, for example, states that source models can be found
-# in the "models/" directory. You probably won't need to change these!
-source-paths: ["models"]
-analysis-paths: ["analysis"]
-test-paths: ["tests"]
-data-paths: ["data"]
-macro-paths: ["macros"]
-
-target-path: "target"  # directory which will store compiled SQL files
-clean-targets:         # directories to be removed by `dbt clean`
-- "target"
-- "dbt_modules"
-
-gcp-my-th-it-dev:
-  target: dev
-  outputs:
-    dev:
-      type: bigquery
-      method: service-account
-      project: gcp-my-th-it-dev
-      dataset: uz_transform_pmkpi
-      threads: 4
-      keyfile: bq-k8s-transformation.json
+pmkpi_optimize_transformation_historical:
+   target: databricks_job
+   outputs:
+     databricks_job:
+      type: databricks
+      method: http
+      schema: "demo_dbt"
+      host: "{{ env_var('SQL_HOST') }}"
+      http_path: "{{ env_var('SQL_HTTP_PATH') }}"
+      token: "{{ env_var('DBT_ACCESS_TOKEN') }}"
