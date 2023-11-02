@@ -1,4 +1,3 @@
-SET TIME ZONE 'Asia/Kuala_Lumpur';
 SELECT
   *,
   CASE
