@@ -146,6 +146,5 @@
     AND 1 = (
     SELECT MIN(1) DUMMY
   FROM
-    `demo_dbt.pm_kpi_wo_notif_and_oper_historical`
+    demo_dbt.pm_kpi_wo_notif_and_oper_historical
     LIMIT 1 )
-

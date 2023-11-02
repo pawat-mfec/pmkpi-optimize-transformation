@@ -369,50 +369,52 @@ FROM (
     WOPlatform
   END
     Platform,
-    DATE_DIFF(NotifRequiredEndDate,CurrentDate, DAY) AS DaysTillRED,
-    DATE_DIFF(LDDDate,CurrentDate, DAY) AS DaysTillLDD,
-    DATE_DIFF(WOTECODate,LDDDate, DAY) AS DaysLDDTillWOTECO,
-    DATE_DIFF(snapshotDate, wocreateddate, DAY) AS WO_Aging_KPI2a,
+    DATE_DIFF(DAY,NotifRequiredEndDate,CurrentDate) AS DaysTillRED,
+    DATE_DIFF(DAY,LDDDate,CurrentDate) AS DaysTillLDD,
+    DATE_DIFF(DAY,WOTECODate,LDDDate) AS DaysLDDTillWOTECO,
+    DATE_DIFF(DAY,snapshotDate, wocreateddate) AS WO_Aging_KPI2a,
     -- beware datetime
-    DATE_DIFF(snapshotDate, ustatuspendsowdate, DAY) AS WO_Aging_KPI2b,
-    DATE_DIFF(snapshotDate, ustatuspendbid_contractrdate, DAY) AS WO_Aging_KPI2c,
-    DATE_DIFF(snapshotDate, woscheduledstartdate, DAY) AS WO_Aging_KPI3a,
-    DATE_DIFF(snapshotDate, woscheduledstartdate, DAY) AS WO_Aging_KPI3b,
-    DATE_DIFF(snapshotDate, woscheduledstartdate, DAY) AS WO_Aging_KPI4a,
-    DATE_DIFF(snapshotDate, woscheduledfinishdate, DAY) AS WO_Aging_KPI5a,
-    DATE_DIFF(snapshotDate, wostatusconfirmeddate, DAY) AS WO_Aging_KPI5b,
-    DATE_DIFF(snapshotDate, notifcreateddate, DAY) AS Notif_Aging_KPI1a,
-    DATE_DIFF(snapshotDate, notifstatusapprovalokdate, DAY) AS Notif_Aging_KPI1b,
-    DATE_DIFF(snapshotDate, WOTECODate, DAY) AS Notif_Aging_KPI5c,
-    DATE_DIFF(CurrentDate,ustatuspendwordate, DAY) AS WO_Aging_KPI2b_1,
-    DATE_DIFF(CurrentDate,ustatusengrreviewreqdate, DAY) AS WO_Aging_KPI2b_2,
-    DATE_DIFF(CurrentDate,ustatuspendwopdate, DAY) AS WO_Aging_KPI2b_3,
-    DATE_DIFF(CurrentDate,ustatuspendstrdate, DAY) AS WO_Aging_KPI2b_4,
-    DATE_DIFF(CurrentDate,ustatuspendterdate, DAY) AS WO_Aging_KPI2b_5,
-    DATE_DIFF(CurrentDate,ustatuspendspfdate, DAY) AS WO_Aging_KPI2b_6,
-    DATE_DIFF(CurrentDate,ustatuspendcerdate, DAY) AS WO_Aging_KPI2b_7,
-    DATE_DIFF(MDDDate,CurrentDate, DAY) AS DaysTillMDD,
-    DATE_DIFF(WOTECODate,MDDDate, DAY) AS DaysMDDTillWOTECO,
+    DATE_DIFF(DAY,snapshotDate, ustatuspendsowdate) AS WO_Aging_KPI2b,
+    DATE_DIFF(DAY,snapshotDate, ustatuspendbid_contractrdate) AS WO_Aging_KPI2c,
+    DATE_DIFF(DAY,snapshotDate, woscheduledstartdate) AS WO_Aging_KPI3a,
+    DATE_DIFF(DAY,snapshotDate, woscheduledstartdate) AS WO_Aging_KPI3b,
+    DATE_DIFF(DAY,snapshotDate, woscheduledstartdate) AS WO_Aging_KPI4a,
+    DATE_DIFF(DAY,snapshotDate, woscheduledfinishdate) AS WO_Aging_KPI5a,
+    DATE_DIFF(DAY,snapshotDate, wostatusconfirmeddate) AS WO_Aging_KPI5b,
+    DATE_DIFF(DAY,snapshotDate, notifcreateddate) AS Notif_Aging_KPI1a,
+    DATE_DIFF(DAY,snapshotDate, notifstatusapprovalokdate) AS Notif_Aging_KPI1b,
+    DATE_DIFF(DAY,snapshotDate, WOTECODate) AS Notif_Aging_KPI5c,
+    DATE_DIFF(DAY,CurrentDate,ustatuspendwordate) AS WO_Aging_KPI2b_1,
+    DATE_DIFF(DAY,CurrentDate,ustatusengrreviewreqdate) AS WO_Aging_KPI2b_2,
+    DATE_DIFF(DAY,CurrentDate,ustatuspendwopdate) AS WO_Aging_KPI2b_3,
+    DATE_DIFF(DAY,CurrentDate,ustatuspendstrdate) AS WO_Aging_KPI2b_4,
+    DATE_DIFF(DAY,CurrentDate,ustatuspendterdate) AS WO_Aging_KPI2b_5,
+    DATE_DIFF(DAY,CurrentDate,ustatuspendspfdate) AS WO_Aging_KPI2b_6,
+    DATE_DIFF(DAY,CurrentDate,ustatuspendcerdate) AS WO_Aging_KPI2b_7,
+    DATE_DIFF(DAY,MDDDate,CurrentDate) AS DaysTillMDD,
+    DATE_DIFF(DAY,WOTECODate,MDDDate) AS DaysMDDTillWOTECO
   FROM (
     SELECT
-      *,
-      DATE_ADD(LAST_DAY(LDDDate), INTERVAL 5 DAY) AS MDDDate
+      * ,
+      DATE_ADD(LAST_DAY(LDDDate),  5 ) AS MDDDate
     FROM (
       SELECT
         *,
-        CAST(1 AS int64) AS CurrentFlag,
-        EXTRACT(DATE FROM current_timestamp AT TIME ZONE 'Asia/Kuala_Lumpur') AS CurrentDate  --Revise 20201212
+        CAST(1 AS INT) AS CurrentFlag,
+        --EXTRACT(DATE FROM current_timestamp ) AS CurrentDate  --Revise 20201212
+        to_date(current_timestamp) AS CurrentDate
         ,EXTRACT(DAYOFWEEK FROM snapshotdate) AS snapshotweekday
       FROM
-        `demo_dbt.pm_kpi_wo_notif_and_oper_current_tbl`
+        demo_dbt.pm_kpi_wo_notif_and_oper_current_tbl
       UNION ALL
       SELECT
         *,
-        CAST(0 AS int64) AS CurrentFlag,
-        EXTRACT(DATE FROM current_timestamp AT TIME ZONE 'Asia/Kuala_Lumpur') AS CurrentDate  --Revise 20201212
+        CAST(0 AS INT) AS CurrentFlag,
+        --EXTRACT(DATE FROM current_timestamp ) AS CurrentDate  --Revise 20201212
+        to_date(current_timestamp) AS CurrentDate
         ,EXTRACT(DAYOFWEEK FROM snapshotdate) AS snapshotweekday
       FROM
-        `demo_dbt.pm_kpi_wo_notif_and_oper_historical`
+        demo_dbt.pm_kpi_wo_notif_and_oper_historical
         --            WHERE
         --FORMAT_DATE('%a', cast(snapshotDatetime as Date)) = 'Wed'                         --Revise 20201212
         --EXTRACT(DAYOFWEEK FROM snapshotDatetime AT TIME ZONE 'Asia/Kuala_Lumpur') = 4       --Revise 20201212
