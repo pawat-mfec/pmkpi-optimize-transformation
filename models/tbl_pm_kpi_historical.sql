@@ -139,7 +139,7 @@
     WODueDateCompMDD,
     WODueDateCompMDD_Desc
   FROM
-    {{ ref(`tbl_pm_kpi_view`) }}
+    {{ ref('tbl_pm_kpi_view') }}
   WHERE
     --  CurrentFlag = 0 AND snapshotweekday = 4
     CurrentFlag = 0 AND EXTRACT(DAY FROM snapshotDate) = 5
