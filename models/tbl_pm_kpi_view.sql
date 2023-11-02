@@ -402,7 +402,7 @@ FROM (
         *,
         CAST(1 AS INT) AS CurrentFlag,
         --EXTRACT(DATE FROM current_timestamp ) AS CurrentDate  --Revise 20201212
-        to_date(current_timestamp) AS CurrentDate
+        to_date(from_utc_timestamp(current_timestamp,'Asia/Kuala_Lumpur')) AS CurrentDate
         ,EXTRACT(DAYOFWEEK FROM snapshotdate) AS snapshotweekday
       FROM
         demo_dbt.pm_kpi_wo_notif_and_oper_current_tbl
@@ -411,7 +411,7 @@ FROM (
         *,
         CAST(0 AS INT) AS CurrentFlag,
         --EXTRACT(DATE FROM current_timestamp ) AS CurrentDate  --Revise 20201212
-        to_date(current_timestamp) AS CurrentDate
+        to_date(from_utc_timestamp(current_timestamp,'Asia/Kuala_Lumpur')) AS CurrentDate
         ,EXTRACT(DAYOFWEEK FROM snapshotdate) AS snapshotweekday
       FROM
         demo_dbt.pm_kpi_wo_notif_and_oper_historical
