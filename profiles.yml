@@ -5,6 +5,6 @@ pmkpi_optimize_transformation_historical:
       type: databricks
       method: http
       schema: "demo_dbt"
-      host: "{{ env_var('POC_HOST') }}"
-      http_path: "{{ env_var('POC_HTTP_PATH') }}"
+      host: "{{ env_var('SQL_HOST') }}"
+      http_path: "{{ env_var('SQL_HTTP_PATH') }}"
       token: "{{ env_var('DBT_ACCESS_TOKEN') }}"
